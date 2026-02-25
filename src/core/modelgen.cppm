@@ -11,8 +11,14 @@ export module modelgen;
 import weretype;
 
 export namespace modelgen {
-	struct Vec3    { f32    x, y, z;    };
-	struct Vec2    { f32    u, v;       };
+	struct Vec3 { 
+		f32 x, y, z;
+		auto operator<=>(const Vec3&) const = default;
+	};
+	struct Vec2 { 
+		f32 u, v;
+		auto operator<=>(const Vec2&) const = default;
+	};
 	struct VecIdx  { u32    p, t, n;    };
 	struct VecQuad { VecIdx a, b, c, d; };
 
