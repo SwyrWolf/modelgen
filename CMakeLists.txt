@@ -14,6 +14,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 	FILE_SET cxx_modules TYPE CXX_MODULES FILES
 		src/vendor/werelib/weretype.cppm
 		src/core/modelgen.cppm
+		src/core/hinge.cppm
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src/include)
