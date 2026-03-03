@@ -13,8 +13,10 @@ add_executable(${PROJECT_NAME}
 target_sources(${PROJECT_NAME} PRIVATE
 	FILE_SET cxx_modules TYPE CXX_MODULES FILES
 		src/vendor/werelib/weretype.cppm
+		src/vendor/werelib/werevec.cppm
 		src/core/modelgen.cppm
 		src/core/hinge.cppm
+		src/core/direction.cppm
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src/include)

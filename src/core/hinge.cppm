@@ -5,6 +5,10 @@ module;
 export module hinge;
 import weretype;
 
+export namespace hinge {
+	
+} 
+
 export auto HingeCTC(f32 height, u64 hingeQty) -> std::vector<f32> {
 	std::vector<f32> prepLoc(hingeQty);
 	f32 ctc = (height - (9*2)) / (hingeQty - 1);

@@ -1,11 +1,23 @@
 #include <print>
+#include <array>
+#include <vector>
+#include <algorithm>
+
 import weretype;
+import werevec;
 import modelgen;
 import hinge;
+import direction;
 
 int main() {
-	const u8 norm = std::to_underlying(modelgen::dirEnum::y) | std::to_underlying(modelgen::dirEnum::n);
-	std::println("Normal direction Test: {}", modelgen::directionVN(norm));
+	const u8 norm = std::to_underlying(eDirection::y) | std::to_underlying(eDirection::n);
+	
+	std::vector<f32> val;
+	for (auto elm : CubicDir_Array()) {
+		std::array<f32,3> tmp = elm;
+		val.append_range(tmp);
+		std::println("CubicDir: {}", elm);
+	}
 
 	auto vec = HingeCTC(84, 3);
 	std::println("{}", vec);

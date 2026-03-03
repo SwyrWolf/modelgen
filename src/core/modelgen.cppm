@@ -9,16 +9,9 @@ module;
 
 export module modelgen;
 import weretype;
+import werevec;
 
 export namespace modelgen {
-	struct Vec3 { 
-		f32 x, y, z;
-		auto operator<=>(const Vec3&) const = default;
-	};
-	struct Vec2 { 
-		f32 u, v;
-		auto operator<=>(const Vec2&) const = default;
-	};
 	struct VecIdx  { u32    p, t, n;    };
 	struct VecQuad { VecIdx a, b, c, d; };
 
@@ -50,19 +43,6 @@ export namespace modelgen {
 	// 80" (6'8") height door hinge placement - 9" + 31" + 31"
 	// 84" (7'0") height door hinge placement - 9" + 33" + 33"
 	// 86" height door hinge placement - 9" + 34" + 34"
-
-	enum struct dirEnum : u8 { 
-		x,y,z,
-		n=0b1000
-	};
-
-	constexpr auto directionVN(const u8 i) -> std::string {
-		const u8 n = ((i & 0b11)+1) * 3;
-		std::string normals = "  0  0  0";
-		normals[n-1] ='1';
-		if (i & 0b1000) normals[n-2] = '-';
-		return std::string(normals);
-	}
 
 	auto SlabModel(f32 w, f32 h, f32 d) -> Model {
 		Model slab;
