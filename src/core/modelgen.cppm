@@ -3,6 +3,7 @@ module;
 #include <vector>
 #include <string>
 #include <fstream>
+#include <filesystem>
 #include <expected>
 #include <algorithm>
 #include <array>
@@ -94,8 +95,15 @@ export namespace modelgen {
 
 	auto WriteObj(std::string_view path, const Model& m) 
 	-> std::expected<void, std::string> {
-		std::ofstream file(std::string(path), std::ios::binary);
+		namespace fs = std::filesystem;
+		fs::path p{path};
+		if (!p.parent_path().empty()) {
+			std::error_code ec;
+			fs::create_directories(p.parent_path(), ec);
+			if (ec) return std::unexpected("Failed to create directory: " + ec.message());
+		}
 
+		std::ofstream file(std::string(path), std::ios::binary);
 		if (!file) return std::unexpected("Failed to open file!");
 
 		file << "# C++ model gen!\n";
