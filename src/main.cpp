@@ -14,7 +14,7 @@ int main() {
 	
 	std::vector<f32> val;
 	for (auto elm : CubicDir_Array()) {
-		std::array<f32,3> tmp = elm;
+		std::array<f32,3> tmp(elm);
 		val.append_range(tmp);
 		std::println("CubicDir: {}", elm);
 	}

@@ -12,6 +12,7 @@ module;
 export module modelgen;
 import weretype;
 import werevec;
+import direction;
 
 export namespace modelgen {
 	struct VecIdx  { u32    p, t, n;    };
@@ -46,6 +47,13 @@ export namespace modelgen {
 	// 84" (7'0") height door hinge placement - 9" + 33" + 33"
 	// 86" height door hinge placement - 9" + 34" + 34"
 
+	constexpr auto FlipAxis(eDirection dir, Vec3& val) -> Vec3 {
+		std::array<f32, 3> out(val);
+		auto index = std::to_underlying(dir);
+		out[index] = -out[index];
+		return Vec3{out};
+	}
+
 	constexpr auto CubicGen(f32 w, f32 h, f32 d) -> std::array<Vec3, 8> {
 		std::array<Vec3, 8> out{};
 		const f32 x = w/2;
@@ -58,6 +66,14 @@ export namespace modelgen {
 			out[2 + elm] = Vec3( x, height,  z);
 			out[3 + elm] = Vec3(-x, height,  z);
 		}
+		// out[0] = {-x, 0, -z};
+		// u8 modId{1};
+		// for (u8 shift : std::views::iota(0, 3)) {
+		// 	auto sliceQty = 1 << shift; // 1, 2, 4
+		// 	auto slice = std::span<Vec3>{out.data(), sliceQty};
+		// 	out[modId] = 
+		// }
+
 		return out;
 	}
 

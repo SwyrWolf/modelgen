@@ -2,6 +2,7 @@ module;
 
 #include <format>
 #include <span>
+#include <array>
 
 export module werevec;
 import weretype;
@@ -18,9 +19,12 @@ export {
 	
 	struct Vec3 {
 		f32 x{}, y{}, z{};
+
 		constexpr Vec3() = default;
 		constexpr Vec3(f32 X, f32 Y, f32 Z) : x(X), y(Y), z(Z) {}
-		constexpr operator std::array<f32,3>() const { return {x,y,z}; }
+		constexpr Vec3(std::array<f32, 3> arr) : x(arr[0]), y(arr[1]), z(arr[2]) {}
+
+		constexpr explicit operator std::array<f32,3>() const { return {x,y,z}; }
 		auto operator<=>(const Vec3&) const = default;
 	};
 	template<>
@@ -42,9 +46,12 @@ export {
 	
 	struct Vec2 {
 		f32 u{}, v{};
+
 		constexpr Vec2() = default;
 		constexpr Vec2(f32 U, f32 V) : u(U), v(V) {}
-		constexpr operator std::array<f32,2>() const { return {u,v}; }
+		constexpr Vec2(std::array<f32, 2> arr) : u(arr[0]), v(arr[1]) {}
+
+		constexpr explicit operator std::array<f32,2>() const { return {u,v}; }
 		auto operator<=>(const Vec2&) const = default;
 	};
 	template<>
