@@ -17,8 +17,9 @@ constexpr u64 f32_hash(f32 f) noexcept {
 export {
 	
 	struct Vec3 {
-		f32 x, y, z;
-		constexpr Vec3(f32 X = 0, f32 Y = 0, f32 Z = 0) : x(X), y(Y), z(Z) {}
+		f32 x{}, y{}, z{};
+		constexpr Vec3() = default;
+		constexpr Vec3(f32 X, f32 Y, f32 Z) : x(X), y(Y), z(Z) {}
 		constexpr operator std::array<f32,3>() const { return {x,y,z}; }
 		auto operator<=>(const Vec3&) const = default;
 	};
@@ -40,8 +41,9 @@ export {
 	};
 	
 	struct Vec2 {
-		f32 u, v;
-		constexpr Vec2(f32 U = 0, f32 V = 0) : u(U), v(V) {}
+		f32 u{}, v{};
+		constexpr Vec2() = default;
+		constexpr Vec2(f32 U, f32 V) : u(U), v(V) {}
 		constexpr operator std::array<f32,2>() const { return {u,v}; }
 		auto operator<=>(const Vec2&) const = default;
 	};
