@@ -63,7 +63,8 @@ export namespace modelgen {
 		auto r1 = out | std::views::take(1) | std::views::transform([](const Vec3& p){ return Vec3{p.x * -1, p.y, p.z}; });
 		auto r2 = out | std::views::take(2) | std::views::reverse | std::views::transform([](const Vec3& p){ return Vec3{p.x, p.y, p.z * -1}; });
 		auto r3 = out | std::views::take(4) | std::views::transform([h](const Vec3& p){ return Vec3{p.x, h, p.z}; });
-		out[1] = *r1.begin();
+		
+		std::ranges::copy(r1, out.begin() + 1); // out[1] = *r1.begin();
 		std::ranges::copy(r2, out.begin() + 2);
 		std::ranges::copy(r3, out.begin() + 4);
 
@@ -74,13 +75,6 @@ export namespace modelgen {
 		// 	out[1 + elm] = Vec3( width, height, -depth);
 		// 	out[2 + elm] = Vec3( width, height,  depth);
 		// 	out[3 + elm] = Vec3(-width, height,  depth);
-		// }
-		// out[0] = {-x, 0, -z};
-		// u8 modId{1};
-		// for (u8 shift : std::views::iota(0, 3)) {
-		// 	auto sliceQty = 1 << shift; // 1, 2, 4
-		// 	auto slice = std::span<Vec3>{out.data(), sliceQty};
-		// 	out[modId] = 
 		// }
 
 		return out;
