@@ -60,9 +60,9 @@ export namespace modelgen {
 		const f32 depth = d/2;
 
 		out[0] = {-width, 0, -depth};
-		auto r1 = out | std::views::take(1) | std::views::transform([](const Vec3& p){ return Vec3{p.x * -1, p.y, p.z}; });
-		auto r2 = out | std::views::take(2) | std::views::reverse | std::views::transform([](const Vec3& p){ return Vec3{p.x, p.y, p.z * -1}; });
-		auto r3 = out | std::views::take(4) | std::views::transform([h](const Vec3& p){ return Vec3{p.x, h, p.z}; });
+		auto r1 = out | std::views::take(1) | std::views::transform([](Vec3 p){ p.x *= -1; return p; });
+		auto r2 = out | std::views::take(2) | std::views::reverse | std::views::transform([](Vec3 p){ p.z *= -1; return p; });
+		auto r3 = out | std::views::take(4) | std::views::transform([h](Vec3 p){ p.y = h; return p; });
 		
 		std::ranges::copy(r1, out.begin() + 1); // out[1] = *r1.begin();
 		std::ranges::copy(r2, out.begin() + 2);
