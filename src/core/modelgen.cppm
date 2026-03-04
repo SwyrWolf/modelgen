@@ -56,16 +56,25 @@ export namespace modelgen {
 
 	constexpr auto CubicGen(f32 w, f32 h, f32 d) -> std::array<Vec3, 8> {
 		std::array<Vec3, 8> out{};
-		const f32 x = w/2;
-		const f32 z = d/2;
-		for (u8 i : std::views::iota(0, 2)) {
-			u8 elm = i * 4;
-			f32 height = h * i;
-			out[0 + elm] = Vec3(-x, height, -z);
-			out[1 + elm] = Vec3( x, height, -z);
-			out[2 + elm] = Vec3( x, height,  z);
-			out[3 + elm] = Vec3(-x, height,  z);
-		}
+		const f32 width = w/2;
+		const f32 depth = d/2;
+
+		out[0] = {-width, 0, -depth};
+		auto r1 = out | std::views::take(1) | std::views::transform([](const Vec3& p){ return Vec3{p.x * -1, p.y, p.z}; });
+		auto r2 = out | std::views::take(2) | std::views::reverse | std::views::transform([](const Vec3& p){ return Vec3{p.x, p.y, p.z * -1}; });
+		auto r3 = out | std::views::take(4) | std::views::transform([h](const Vec3& p){ return Vec3{p.x, h, p.z}; });
+		out[1] = *r1.begin();
+		std::ranges::copy(r2, out.begin() + 2);
+		std::ranges::copy(r3, out.begin() + 4);
+
+		// for (u8 i : std::views::iota(0, 2)) {
+		// 	u8 elm = i * 4;
+		// 	f32 height = h * i;
+		// 	out[0 + elm] = Vec3(-width, height, -depth);
+		// 	out[1 + elm] = Vec3( width, height, -depth);
+		// 	out[2 + elm] = Vec3( width, height,  depth);
+		// 	out[3 + elm] = Vec3(-width, height,  depth);
+		// }
 		// out[0] = {-x, 0, -z};
 		// u8 modId{1};
 		// for (u8 shift : std::views::iota(0, 3)) {
