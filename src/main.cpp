@@ -18,6 +18,9 @@ int main() {
 		val.append_range(tmp);
 		std::println("CubicDir: {}", elm);
 	}
+	for (auto elm : modelgen::CubicGen(36, 84, 1.75)) {
+		std::println("CubicGen: {}", elm);
+	}
 
 	auto vec = HingeCTC(84, 3);
 	std::println("{}", vec);

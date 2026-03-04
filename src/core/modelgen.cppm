@@ -7,6 +7,7 @@ module;
 #include <expected>
 #include <algorithm>
 #include <array>
+#include <ranges>
 
 export module modelgen;
 import weretype;
@@ -44,6 +45,21 @@ export namespace modelgen {
 	// 80" (6'8") height door hinge placement - 9" + 31" + 31"
 	// 84" (7'0") height door hinge placement - 9" + 33" + 33"
 	// 86" height door hinge placement - 9" + 34" + 34"
+
+	constexpr auto CubicGen(f32 w, f32 h, f32 d) -> std::array<Vec3, 8> {
+		std::array<Vec3, 8> out{};
+		const f32 x = w/2;
+		const f32 z = d/2;
+		for (u8 i : std::views::iota(0, 2)) {
+			u8 elm = i * 4;
+			f32 height = h * i;
+			out[0 + elm] = Vec3(-x, height, -z);
+			out[1 + elm] = Vec3( x, height, -z);
+			out[2 + elm] = Vec3( x, height,  z);
+			out[3 + elm] = Vec3(-x, height,  z);
+		}
+		return out;
+	}
 
 	auto SlabModel(f32 w, f32 h, f32 d) -> Model {
 		Model slab;
