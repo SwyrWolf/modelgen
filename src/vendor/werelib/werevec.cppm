@@ -2,6 +2,7 @@ module;
 
 #include <format>
 #include <array>
+#include <cassert>
 
 export module werevec;
 import weretype;
@@ -24,6 +25,10 @@ export {
 		constexpr Vec3(std::array<f32, 3> arr) : x(arr[0]), y(arr[1]), z(arr[2]) {}
 
 		constexpr explicit operator std::array<f32,3>() const { return {x,y,z}; }
+		constexpr decltype(auto) operator[](this auto& self, std::size_t i) {
+			assert(i < 3);
+			return (&self.x)[i];
+		}
 		auto operator<=>(const Vec3&) const = default;
 	};
 	template<>
@@ -51,6 +56,10 @@ export {
 		constexpr Vec2(std::array<f32, 2> arr) : u(arr[0]), v(arr[1]) {}
 
 		constexpr explicit operator std::array<f32,2>() const { return {u,v}; }
+		constexpr decltype(auto) operator[](this auto& self, std::size_t i) {
+			assert(i < 2);
+			return (&self.u)[i];
+		}
 		auto operator<=>(const Vec2&) const = default;
 	};
 	template<>
