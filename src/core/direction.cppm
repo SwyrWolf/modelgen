@@ -1,10 +1,6 @@
 module;
 
 #include <vector>
-#include <string>
-#include <fstream>
-#include <expected>
-#include <algorithm>
 #include <array>
 
 export module direction;

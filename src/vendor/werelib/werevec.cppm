@@ -1,7 +1,6 @@
 module;
 
 #include <format>
-#include <span>
 #include <array>
 
 export module werevec;
