@@ -17,6 +17,7 @@ import direction;
 export namespace modelgen {
 	struct VecIdx  { u32    p, t, n;    };
 	struct VecQuad { VecIdx a, b, c, d; };
+	struct MdlFaces { size_t a, b, c, d };
 
 	struct Model {
 		std::vector<Vec3>    pos;
@@ -43,42 +44,39 @@ export namespace modelgen {
 		direction::Bottom,
 	});
 
-	// 80" (6'8") height door hinge placement - 9" + 31" + 31"
-	// 84" (7'0") height door hinge placement - 9" + 33" + 33"
-	// 86" height door hinge placement - 9" + 34" + 34"
-
 	constexpr auto CubicGen(f32 w, f32 h, f32 d) -> std::array<Vec3, 8> {
+		namespace VW = std::views;
 		std::array<Vec3, 8> out{};
-		
 		out[0] = {-w/2, 0, -d/2}; // Origin Vertex
+		
 		// -X mirrored to X
 		std::ranges::copy(
-			out | std::views::take(1) 
-			    | std::views::transform([](Vec3 p){
-			      p[0] *= -1; return p;
-			    }),
+			out | VW::take(1) | VW::transform([](Vec3 p){
+				p[0] *= -1; return p;
+			}),
 			out.begin() + 1
 		);
 
 		// -X/X mirrored to -Z/Z (counter clock-wise)
 		std::ranges::copy(
-			out | std::views::take(2)
-			    | std::views::reverse
-			    | std::views::transform([](Vec3 p){
-			      p[2] *= -1; return p;
-			    }),
+			out | VW::take(2) | VW::reverse | VW::transform([](Vec3 p){
+				p[2] *= -1; return p;
+		  }), 
 			out.begin() + 2
 		);
 
 		// Bottom plane mirrored above
 		std::ranges::copy(
-			out | std::views::take(4)
-			    | std::views::transform([h](Vec3 p){
-			      p[1] = h; return p;
-			    }),
+			out | VW::take(4) | VW::transform([h](Vec3 p){
+				p[1] = h; return p;
+		  }), 
 			out.begin() + 4
 		);
 		return out;
+	}
+
+	constexpr auto CubicGenQuads(std::array<Vec3, 8> Origin) -> void {
+
 	}
 
 	auto SlabModel(f32 w, f32 h, f32 d) -> Model {
