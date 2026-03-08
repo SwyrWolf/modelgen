@@ -1,10 +1,5 @@
 module;
 
-#include <bit>
-#include <array>
-#include <type_traits>
-#include <ranges>
-
 export module weretype;
 
 export {
