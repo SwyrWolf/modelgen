@@ -17,6 +17,7 @@ import direction;
 export namespace modelgen {
 	struct VecIdx  { u32    p, t, n;    };
 	struct VecQuad { VecIdx a, b, c, d; };
+	struct MdlFaces { size_t a, b, c, d };
 
 	struct Model {
 		std::vector<Vec3>    pos;
@@ -43,50 +44,39 @@ export namespace modelgen {
 		direction::Bottom,
 	});
 
-	// 80" (6'8") height door hinge placement - 9" + 31" + 31"
-	// 84" (7'0") height door hinge placement - 9" + 33" + 33"
-	// 86" height door hinge placement - 9" + 34" + 34"
-
 	constexpr auto CubicGen(f32 w, f32 h, f32 d) -> std::array<Vec3, 8> {
+		namespace VW = std::views;
 		std::array<Vec3, 8> out{};
+		out[0] = {-w/2, 0, -d/2}; // Origin Vertex
 		
-		// Version 3
-		out[0] = {-w/2, 0, -d/2};
+		// -X mirrored to X
 		std::ranges::copy(
-			out | std::views::take(1) | std::views::transform([](Vec3 p){ p[0] *= -1; return p; }),
+			out | VW::take(1) | VW::transform([](Vec3 p){
+				p[0] *= -1; return p;
+			}),
 			out.begin() + 1
 		);
+
+		// -X/X mirrored to -Z/Z (counter clock-wise)
 		std::ranges::copy(
-			out | std::views::take(2) | std::views::reverse | std::views::transform([](Vec3 p){ p[2] *= -1; return p; }),
+			out | VW::take(2) | VW::reverse | VW::transform([](Vec3 p){
+				p[2] *= -1; return p;
+		  }), 
 			out.begin() + 2
 		);
+
+		// Bottom plane mirrored above
 		std::ranges::copy(
-			out | std::views::take(4) | std::views::transform([h](Vec3 p){ p[1] = h; return p; }),
+			out | VW::take(4) | VW::transform([h](Vec3 p){
+				p[1] = h; return p;
+		  }), 
 			out.begin() + 4
 		);
-
-		// Version 2
-		// auto r1 = out | std::views::take(1) | std::views::transform([](Vec3 p){ p.x *= -1; return p; });
-		// auto r2 = out | std::views::take(2) | std::views::reverse | std::views::transform([](Vec3 p){ p.z *= -1; return p; });
-		// auto r3 = out | std::views::take(4) | std::views::transform([h](Vec3 p){ p.y = h; return p; });
-		
-		// std::ranges::copy(r1, out.begin() + 1); // out[1] = *r1.begin();
-		// std::ranges::copy(r2, out.begin() + 2);
-		// std::ranges::copy(r3, out.begin() + 4);
-
-		// Version 1
-		// f32 width = w/2;
-		// f32 depth = d/2;
-		// for (u8 i : std::views::iota(0, 2)) {
-		//  u8 elm = i * 4;
-		//  f32 height = h * i;
-		//  out[0 + elm] = Vec3(-width, height, -depth);
-		//  out[1 + elm] = Vec3( width, height, -depth);
-		//  out[2 + elm] = Vec3( width, height,  depth);
-		//  out[3 + elm] = Vec3(-width, height,  depth);
-		// }
-
 		return out;
+	}
+
+	constexpr auto CubicGenQuads(std::array<Vec3, 8> Origin) -> void {
+
 	}
 
 	auto SlabModel(f32 w, f32 h, f32 d) -> Model {
