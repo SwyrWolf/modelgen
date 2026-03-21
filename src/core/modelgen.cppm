@@ -15,9 +15,9 @@ import werevec;
 import direction;
 
 export namespace modelgen {
-	struct VecIdx  { u32    p, t, n;    };
-	struct VecQuad { VecIdx a, b, c, d; };
-	struct MdlFaces { size_t a, b, c, d };
+	struct VecIdx  { u32    p, t, n;     };
+	struct VecQuad { VecIdx a, b, c, d;  };
+	struct MdlFaces { size_t a, b, c, d; };
 
 	struct Model {
 		std::vector<Vec3>    pos;

@@ -15,6 +15,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 		src/vendor/werelib/weretype.cppm
 		src/vendor/werelib/werevec.cppm
 		src/core/modelgen.cppm
+		src/core/doorgen.cppm
 		src/core/hinge.cppm
 		src/core/direction.cppm
 )

@@ -7,6 +7,7 @@ import weretype;
 import werevec;
 import modelgen;
 import hinge;
+import door;
 import direction;
 
 int main() {
@@ -23,7 +24,13 @@ int main() {
 	}
 
 	auto vec = HingeCTC(84, 3);
-	std::println("{}", vec);
+	std::println("HingeCTC: {}", vec);
+
+	auto hg = door::Calc_HingeGap(84, 9, 3);
+	std::println("HingeGap 7f0: {}", hg);
+
+	auto hg2 = door::Calc_HingeGap(96, 9, 4);
+	std::println("HingeGap 8f0: {}", hg2);
 
 	std::println("Default Comparison test: {}", (modelgen::direction::Front == modelgen::direction::Back));
 	
