@@ -31,6 +31,10 @@ int main() {
 
 	auto hg2 = door::Calc_HingeGap(96, 9, 4);
 	std::println("HingeGap 8f0: {}", hg2);
+	
+	for (auto elm : door::Create_SquareQuad(12,64)) {
+		std::println("SquareQuad: {}", elm);
+	}
 
 	std::println("Default Comparison test: {}", (modelgen::direction::Front == modelgen::direction::Back));
 	

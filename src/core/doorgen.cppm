@@ -28,16 +28,36 @@ export namespace door {
 		return (slabHeight - (margin * 2)) / (qty - 1);
 	}
 
+	struct CloneOffset_adapter {
+		f32 Vec3::* axis;
+		f32 offset;
+
+		template <std::ranges::input_range R>
+		friend auto operator|(R&& r, CloneOffset_adapter fn) -> std::array<Vec3, 2> {
+			std::array<Vec3, 2> out{};
+			for (auto&& [i, src] : r | std::views::enumerate) {
+				out[i] = src;
+				out[i].*fn.axis += fn.offset;
+			}
+			return out;
+		}
+	};
+
+	constexpr auto CloneOffset(f32 Vec3::* axis, f32 offset) -> CloneOffset_adapter {
+		return {axis, offset};
+	}
+
 	auto Create_SquareQuad(f32 width, f32 height) -> std::array<Vec3, 4> {
 		std::array<Vec3, 4> out{};
+		size_t half{2};
+		
 		out[1].x = width;
-		std::ranges::copy(
+		auto top = 
 			out
-			| std::views::take(2) 
+			| std::views::take(half)
 			| std::views::reverse
-			| std::views::transform([height](Vec3 p){p.y = height; return p; }),
-			out.begin() + 2
-		);
+			| CloneOffset(&Vec3::y, height);
+		std::ranges::copy(top, out.begin() + half);
 
 		return out;
 	}
