@@ -36,15 +36,15 @@ export namespace door {
 		
 		auto topAdjust = [](Vec3& v){ v.y = 33.0f; };
 		auto topQuad = bottomQuad;
-		topQuad.move(&Vec3::y, (6.75f + 4.5f))
+		topQuad.mirror(&Vec3::x).move(&Vec3::y, (6.75f + 4.5f))
 		.skew<tl>(topAdjust)
 		.skew<tr>(topAdjust);
 
 		auto middleQuad = vrtx::Quad{
+			bottomQuad.get<bl>(),
 			bottomQuad.get<tl>(),
-			bottomQuad.get<tr>(),
-			topQuad.get<br>(),
-			topQuad.get<bl>()
+			topQuad.get<bl>(),
+			topQuad.get<tl>()
 		};
 
 		return std::vector<vrtx::Quad>{bottomQuad, middleQuad, topQuad};
