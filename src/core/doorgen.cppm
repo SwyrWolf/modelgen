@@ -23,14 +23,25 @@ export namespace door {
 		size_t hinge_qty{};
 		Hinge hinge{};
 		f32 hinge_margin{};
-		f32 hinge_depth_padding{};
+		f32 hinge_depth_margin{};
 	};
 
 	auto Calc_HingeGap(f32 slabHeight, f32 margin, size_t qty) -> f32 {
 		return (slabHeight - (margin * 2)) / (qty - 1);
 	}
 
-	auto Gen_HingeQuads(Door door) -> std::vector<vrtx::Quad> {
+	auto Calc_MidHingeGap(f32 gap, f32 margin, size_t qty) -> std::vector<f32> {
+		std::vector<f32> v(qty - 1);
+
+		auto halfGap = (gap/2);
+		for (auto [i, val] : std::views::enumerate(v)) {
+			v[i] = (margin + (gap * i) + halfGap);
+		}
+
+		return v;
+	}	
+
+	auto Gen_HingeQuads(Door& door) -> std::vector<vrtx::Quad> {
 		using enum vrtx::Vert;
 		auto bottomQuad = vrtx::Quad(1.1875f, 6.75f).skew<tl>([](Vec3& v) { v.x += 1.0f; });
 		
@@ -66,6 +77,6 @@ export namespace door {
 			.radius = 0,
 		},
 		.hinge_margin = 9,
-		.hinge_depth_padding = 0.125,
+		.hinge_depth_margin = 0.125,
 	};
 }
