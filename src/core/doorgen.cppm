@@ -2,11 +2,13 @@ module;
 
 #include <array>
 #include <vector>
+#include <vector>
 #include <ranges>
 
 export module door;
 import weretype;
 import werevec;
+import vrtx;
 
 export namespace door {
 
@@ -28,45 +30,24 @@ export namespace door {
 		return (slabHeight - (margin * 2)) / (qty - 1);
 	}
 
-	struct CloneOffset_adapter {
-		f32 Vec3::* axis;
-		f32 offset;
-
-		template <std::ranges::input_range R>
-		friend auto operator|(R&& r, CloneOffset_adapter fn) -> std::array<Vec3, 2> {
-			std::array<Vec3, 2> out{};
-			for (auto&& [i, src] : r | std::views::enumerate) {
-				out[i] = src;
-				out[i].*fn.axis += fn.offset;
-			}
-			return out;
-		}
-	};
-
-	constexpr auto CloneOffset(f32 Vec3::* axis, f32 offset) -> CloneOffset_adapter {
-		return {axis, offset};
-	}
-
-	auto Create_SquareQuad(f32 width, f32 height) -> std::array<Vec3, 4> {
-		std::array<Vec3, 4> out{};
-		size_t half{2};
+	auto Gen_HingeQuads(Door door) -> std::vector<vrtx::Quad> {
+		using enum vrtx::Vert;
+		auto bottomQuad = vrtx::Quad(1.1875f, 6.75f).skew<tl>([](Vec3& v) { v.x += 1.0f; });
 		
-		out[1].x = width;
-		auto top = 
-			out
-			| std::views::take(half)
-			| std::views::reverse
-			| CloneOffset(&Vec3::y, height);
-		std::ranges::copy(top, out.begin() + half);
+		auto topAdjust = [](Vec3& v){ v.y = 33.0f; };
+		auto topQuad = bottomQuad;
+		topQuad.move(&Vec3::y, (6.75f + 4.5f))
+		.skew<tl>(topAdjust)
+		.skew<tr>(topAdjust);
 
-		return out;
-	}
+		auto middleQuad = vrtx::Quad{
+			bottomQuad.get<tl>(),
+			bottomQuad.get<tr>(),
+			topQuad.get<br>(),
+			topQuad.get<bl>()
+		};
 
-	auto Gen_HingeVrts(Door door) -> std::vector<Vec3> {
-		std::vector<Vec3> pos{};
-		pos.emplace_back(Vec3{});
-
-		return pos;
+		return std::vector<vrtx::Quad>{bottomQuad, middleQuad, topQuad};
 	}
 
 	Door exampleDoor {

@@ -2,6 +2,7 @@ module;
 
 #include <format>
 #include <array>
+#include <ranges>
 
 export module vrtx;
 import weretype;
@@ -11,6 +12,9 @@ export namespace vrtx {
 	enum struct Vert : size_t { bl, br, tr, tl };
 	struct Quad {
 		std::array<Vec3, 4> m_vert{};
+		Quad(Vec3 bl, Vec3 br, Vec3 tr, Vec3 tl) 
+			: m_vert{{ bl, br, tr, tl }} 
+		{}
 		Quad(f32 w, f32 h)
 			: m_vert{{
 				{0.0f, 0.0f, 0.0f},
@@ -28,6 +32,27 @@ export namespace vrtx {
 		template<Vert V>
 		Quad& skew(auto fn) {
 			fn(std::get<std::to_underlying(V)>(m_vert));
+			return *this;
+		}
+		template<Vert V>
+		constexpr const Vec3& get() const noexcept {
+			return std::get<std::to_underlying(V)>(m_vert);
+		}
+
+		Quad& move(f32 Vec3::* axis, f32 amount) {
+			for (Vec3& v : m_vert) {
+				v.*axis += amount;
+			}
+			return *this;
+		}
+
+		Quad& mirror(f32 Vec3::* axis) {
+			auto src = *this;
+			auto rev = src.m_vert | std::views::reverse;
+			for (auto [i, v] : std::views::enumerate(rev)) {
+				m_vert[i].*axis = v.*axis;
+			}
+
 			return *this;
 		}
 	};

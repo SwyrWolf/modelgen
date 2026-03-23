@@ -45,3 +45,45 @@ constexpr auto CubicGen(f32 w, f32 h, f32 d) -> std::array<Vec3, 8> {
 	slab.pos.emplace_back(Vec3{  w/2, h,     d/2 }); // back - top - right
 	slab.pos.emplace_back(Vec3{ -w/2, h,     d/2 }); // back - top - left
 ```
+
+## Template w/ ranges::input_range
+```cpp
+struct CloneOffset_adapter {
+	f32 Vec3::* axis;
+	f32 offset;
+
+	template <std::ranges::input_range R>
+	friend auto operator|(R&& r, CloneOffset_adapter fn) -> std::array<Vec3, 2> {
+		std::array<Vec3, 2> out{};
+		for (auto&& [i, src] : r | std::views::enumerate) {
+			out[i] = src;
+			out[i].*fn.axis += fn.offset;
+		}
+		return out;
+	}
+};
+
+constexpr auto CloneOffset(f32 Vec3::* axis, f32 offset) -> CloneOffset_adapter {
+	return {axis, offset};
+}
+
+auto Create_SquareQuad(f32 width, f32 height) -> std::array<Vec3, 4> {
+	std::array<Vec3, 4> out{};
+	size_t half{2};
+	
+	out[1].x = width;
+	auto top = 
+		out
+		| std::views::take(half)
+		| std::views::reverse
+		| CloneOffset(&Vec3::y, height);
+	std::ranges::copy(top, out.begin() + half);
+
+	return out;
+}
+```
+
+## Appending two struct enums together
+```cpp
+const u8 norm = std::to_underlying(eDirection::y) | std::to_underlying(eDirection::n);
+```

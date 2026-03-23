@@ -75,10 +75,6 @@ export namespace modelgen {
 		return out;
 	}
 
-	constexpr auto CubicGenQuads(std::array<Vec3, 8> Origin) -> void {
-
-	}
-
 	auto SlabModel(f32 w, f32 h, f32 d) -> Model {
 		Model slab;
 		f32 n = std::max((w+d), (h+d));
