@@ -9,6 +9,7 @@ import modelgen;
 import hinge;
 import door;
 import direction;
+import vrtx;
 
 int main() {
 	const u8 norm = std::to_underlying(eDirection::y) | std::to_underlying(eDirection::n);
@@ -37,6 +38,9 @@ int main() {
 	}
 
 	std::println("Default Comparison test: {}", (modelgen::direction::Front == modelgen::direction::Back));
+
+	using enum vrtx::Vert;
+	std::println("Vrtx.math Quad {}", vrtx::Quad(1.1875f, 6.75f).skew<tl>([](Vec3& v) { v.x += 1.0f; }));
 	
 	if (auto r = modelgen::WriteObj("./.out/obj/genSlab.obj", modelgen::SlabModel(36, 84, 1.75)); !r) {
 		std::println("Failed: {}", r.error());

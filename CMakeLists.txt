@@ -18,6 +18,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 		src/core/doorgen.cppm
 		src/core/hinge.cppm
 		src/core/direction.cppm
+		src/core/vrtx/vrtx.cppm
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src/include)
