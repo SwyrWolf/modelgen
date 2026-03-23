@@ -47,8 +47,8 @@ export namespace vrtx {
 		}
 
 		Quad& mirror(f32 Vec3::* axis) {
-			auto src = *this;
-			auto rev = src.m_vert | std::views::reverse;
+			auto src = m_vert;
+			auto rev = src | std::views::reverse;
 			for (auto [i, v] : std::views::enumerate(rev)) {
 				m_vert[i].*axis = v.*axis;
 			}
