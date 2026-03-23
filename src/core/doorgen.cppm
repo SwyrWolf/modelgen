@@ -43,9 +43,10 @@ export namespace door {
 
 	auto Gen_HingeQuads(Door& door) -> std::vector<vrtx::Quad> {
 		using enum vrtx::Vert;
+		auto midHingeGap = Calc_MidHingeGap(Calc_HingeGap(door.slab.height, door.hinge_margin, door.hinge_qty), door.hinge_margin, door.hinge_qty);
 		auto bottomQuad = vrtx::Quad(1.1875f, 6.75f).skew<tl>([](Vec3& v) { v.x += 1.0f; });
 		
-		auto topAdjust = [](Vec3& v){ v.y = 33.0f; };
+		auto topAdjust = [midHingeGap](Vec3& v){ v.y = midHingeGap[0]; };
 		auto topQuad = bottomQuad;
 		topQuad.mirror(&Vec3::x).move(&Vec3::y, (6.75f + 4.5f))
 		.skew<tl>(topAdjust)
