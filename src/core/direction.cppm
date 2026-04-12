@@ -2,6 +2,7 @@ module;
 
 #include <vector>
 #include <array>
+#include <utility>
 
 export module direction;
 import weretype;
