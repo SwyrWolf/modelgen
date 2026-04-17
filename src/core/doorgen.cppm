@@ -37,11 +37,6 @@ export namespace door {
 		for (auto [i, val] : were::thru(v)) {
 			v[i] = (margin + (gap * i) + halfGap);
 		}
-		// for (auto [i, val] : std::views::zip(
-		// 	std::views::iota(0uz), v
-		// )) {
-		// 	v[i] = (margin + (gap * i) + halfGap);
-		// }
 
 		return v;
 	}	
