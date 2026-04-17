@@ -1,5 +1,8 @@
 module;
 
+#include <ranges>
+#include <algorithm>
+
 export module weretype;
 
 export {
@@ -31,4 +34,21 @@ export {
 	[[nodiscard]] constexpr ToType raw(From&& value) {
 		return reinterpret_cast<ToType>(value);
 	}
+}
+
+export namespace were {
+	// thru(R) -- Enumerate View -- wrapper for std::views::enumerate
+	#if defined(__APPLE__) || defined(__MACH__)
+		// fallback for Apple w/ LLVM Clang compiler and libc++ support
+		template <typename R>
+		constexpr auto thru(R&& range) {
+			return std::views::zip(std::views::iota(0uz), std::forward<R>(range));
+		}
+	#else
+		// Standard C++ implementation
+		template <typename R>
+		constexpr auto thru(R&& range) {
+			return std::views::enumerate(std::forward<R>(range));
+		}
+	#endif
 }
