@@ -8,6 +8,7 @@ module;
 #include <algorithm>
 #include <array>
 #include <ranges>
+#include <print>
 
 export module modelgen;
 import weretype;
@@ -24,6 +25,40 @@ export namespace modelgen {
 		std::vector<Vec3>    nor;
 		std::vector<Vec2>    tex;
 		std::vector<VecQuad> face;
+	};
+
+	struct mdl_vrtx {
+		Vec3 pos{};
+
+		std::vector<size_t> idxEdge;
+		std::vector<size_t> idxFace;
+
+		mdl_vrtx(Vec3 in) :  pos(in) {}
+	};
+	
+	struct mdl_edge {
+		size_t id{};
+
+		size_t idxVrtxA, idxVrtxB;
+		std::vector<size_t> idxFaces;
+	};
+	
+	struct mdl_face {
+		size_t id{};
+		
+		std::vector<size_t> idxVrtx;
+		std::vector<size_t> idxEdge;
+		std::vector<size_t> idxNormal;
+	};
+	
+	struct mdl_obj {
+		std::string name;
+
+		std::vector<mdl_vrtx> vrtx;
+		std::vector<mdl_edge> edge;
+		std::vector<mdl_face> face;
+
+		std::vector<Vec3> normalDirection;
 	};
 
 	namespace direction {
@@ -44,7 +79,7 @@ export namespace modelgen {
 		direction::Bottom,
 	});
 
-	constexpr auto CubicGen(f32 w, f32 h, f32 d) -> std::array<Vec3, 8> {
+	constexpr auto CubicGen(f32 w, f32 h, f32 d) -> mdl_obj {
 		namespace VW = std::views;
 		std::array<Vec3, 8> out{};
 		out[0] = {-w/2, 0, -d/2}; // Origin Vertex
@@ -72,7 +107,14 @@ export namespace modelgen {
 		  }), 
 			out.begin() + 4
 		);
-		return out;
+
+		mdl_obj newObj;
+		for (auto [i, val] : were::thru(out)) {
+			newObj.vrtx.emplace_back(out[i]);
+		}
+		std::println("newObj Vrtx qty: {}", newObj.vrtx.size());
+
+		return newObj;
 	}
 
 	auto SlabModel(f32 w, f32 h, f32 d) -> Model {

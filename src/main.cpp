@@ -30,4 +30,6 @@ int main() {
 	} else {
 		std::println("Success: ./out/obj/genSlab.obj");
 	}
+
+	modelgen::CubicGen(36,84,1.75);
 }
