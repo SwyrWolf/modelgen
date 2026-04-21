@@ -31,5 +31,10 @@ int main() {
 		std::println("Success: ./out/obj/genSlab.obj");
 	}
 
-	modelgen::CubicGen(36,84,1.75);
+	auto myObj = modelgen::CubicGen_vrtx(36,84,1.75);
+	modelgen::CubicGen_faces(myObj);
+
+	auto indx = myObj.face[0].idxNormal;
+	std::println("normal dierction of face 0: {}", modelgen::CubeNormals[indx]);
+	std::println("normal dierction of face 0: {}", indx);
 }

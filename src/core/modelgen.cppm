@@ -48,7 +48,8 @@ export namespace modelgen {
 		
 		std::vector<size_t> idxVrtx;
 		std::vector<size_t> idxEdge;
-		std::vector<size_t> idxNormal;
+		size_t idxNormal;
+		// std::vector<Vec3> normalDirection;
 	};
 	
 	struct mdl_obj {
@@ -57,8 +58,6 @@ export namespace modelgen {
 		std::vector<mdl_vrtx> vrtx;
 		std::vector<mdl_edge> edge;
 		std::vector<mdl_face> face;
-
-		std::vector<Vec3> normalDirection;
 	};
 
 	namespace direction {
@@ -79,7 +78,11 @@ export namespace modelgen {
 		direction::Bottom,
 	});
 
-	constexpr auto CubicGen(f32 w, f32 h, f32 d) -> mdl_obj {
+	constexpr void flipNormal(std::span<const mdl_vrtx> vertices) {
+
+	}
+
+	constexpr auto CubicGen_vrtx(f32 w, f32 h, f32 d) -> mdl_obj {
 		namespace VW = std::views;
 		std::array<Vec3, 8> out{};
 		out[0] = {-w/2, 0, -d/2}; // Origin Vertex
@@ -115,6 +118,21 @@ export namespace modelgen {
 		std::println("newObj Vrtx qty: {}", newObj.vrtx.size());
 
 		return newObj;
+	}
+
+	constexpr auto CubicGen_faces(mdl_obj& obj) -> mdl_obj {
+		std::array<mdl_face, 6> faces{};
+		faces[0] = mdl_face{
+			.id = 0,
+			.idxVrtx = {0,1,2,3},
+			.idxEdge = {},
+			.idxNormal = 5uz
+		};
+
+		for (auto [i, val] : were::thru(faces)) {
+			obj.face.emplace_back(val);
+		}
+		return obj;
 	}
 
 	auto SlabModel(f32 w, f32 h, f32 d) -> Model {
